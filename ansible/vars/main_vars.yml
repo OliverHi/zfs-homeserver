@@ -1,0 +1,9 @@
+---
+# all non secret vars
+zfs: {
+  poolName: dataPool,
+  DISK1: '/dev/disk/by-id/scsi-123abc',
+  DISK2: '/dev/disk/by-id/scsi-456def',
+  DISK3: '/dev/disk/by-id/scsi-789ghi',
+  CACHEDISK: '/dev/disk/by-id/scsi-424242ababab',
+}

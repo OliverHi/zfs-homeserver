@@ -1,0 +1,23 @@
+---
+  - name: "Setting up the home server"
+    hosts: localhost
+    connection: local
+    
+    # become root user, which is needed for most tasks
+    become: yes
+    become_user: root
+    
+    vars_files:
+        - vars/main_vars.yml
+
+    tasks:
+    - name: Install generic needed packages
+      apt:
+        name:
+        - software-properties-common
+        - linux-headers
+        - dkms
+        state: latest
+        cache_valid_time: 3600
+
+    - import_tasks: tasks/setupZFStask.yml
