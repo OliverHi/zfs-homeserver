@@ -15,7 +15,6 @@
       apt:
         name:
         - software-properties-common
-        - linux-headers
         - dkms
         state: latest
         cache_valid_time: 3600

@@ -19,22 +19,22 @@
 
 - name: Create file system for personal files
   zfs:
-    name: {{zfs.poolName}}/personal
+    name: '{{zfs.poolName}}/personal'
     state: present
 
 - name: Create file system for media files
   zfs:
-    name: {{zfs.poolName}}/media
+    name: '{{zfs.poolName}}/media'
     state: present
 
 - name: Create file system for backups
   zfs:
-    name: {{zfs.poolName}}/backup
+    name: '{{zfs.poolName}}/backup'
     state: present
 
 - name: Create file system for docker data
   zfs:
-    name: {{zfs.poolName}}/docker
+    name: '{{zfs.poolName}}/docker'
     state: present
 
 # TODO check if already set
