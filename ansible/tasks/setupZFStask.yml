@@ -10,12 +10,12 @@
 # Gather space usage about all imported ZFS pools
 - zpool_facts: properties='free,size'
 
-- debug: msg='ZFS pool {{ item.name }} exists {{ item.name == '{{zfs.poolName}}' }} and has {{ item.free }} free space out of {{ item.size }}.'
+- debug: msg='ZFS pool {{ item.name }} exists? -> [{{ item.name == zfs.poolName }}] It has {{ item.free }} free space out of {{ item.size }}.'
   with_items: '{{ ansible_zfs_pools }}'
 
 - name: Create zsh pool '{{zfs.poolName}}' with 3 disks and cache
   shell: 'zpool create -o ashift=12 {{zfs.poolName}} raidz {{zfs.DISK1}} {{zfs.DISK2}} {{zfs.DISK3}} cache {{zfs.CACHEDISK}}'
-  when: 'not (ansible_zfs_pools|length > 0 and ansible_zfs_pools[0].name == "{{zfs.poolName}}")'
+  when: 'not (ansible_zfs_pools|length > 0 and ansible_zfs_pools[0].name == zfs.poolName)'
 
 - name: Create file system for personal files
   zfs:
