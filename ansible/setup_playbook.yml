@@ -20,3 +20,5 @@
         cache_valid_time: 3600
 
     - import_tasks: tasks/setupZFStask.yml
+    - import_tasks: tasks/setupUsersTask.yml
+    - import_tasks: tasks/setupSambaTask.yml

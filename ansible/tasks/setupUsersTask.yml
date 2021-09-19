@@ -1,0 +1,44 @@
+---
+- name: Ensure group {{item}} exists
+  group:
+    name: "{{item}}"
+    state: present
+  with_items:
+    "{{usergroups}}"
+
+- name: Create user {{item.name}}
+  user:
+    name: "{{item.name}}"
+    groups: "{{item.groups}}"
+    append: yes
+  with_items:
+    "{{users}}"
+
+- name: Create personal folder for {{item.name}}
+  file:
+    path: /{{zfs.poolName}}/personal/{{item.name}}
+    state: directory
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+    mode: '700'
+  with_items:
+    - "{{users}}"
+
+- name: Create backup folder for {{item.name}}
+  file:
+    path: /{{zfs.poolName}}/backup/{{item.name}}
+    state: directory
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+    mode: '700'
+  with_items:
+    - "{{users}}"
+
+- name: Create shared folder {{item.name}}
+  file:
+    path: "{{item.path}}"
+    state: directory
+    group: "{{shared_folders_group}}"
+    mode: '771'
+  with_items:
+    - "{{shared_folders}}"

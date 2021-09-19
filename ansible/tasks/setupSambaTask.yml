@@ -1,0 +1,24 @@
+---
+- name: Install generic needed packages
+      apt:
+        name:
+        - samba
+        - samba-vfs-modules
+        state: latest
+        cache_valid_time: 3600
+
+# TODO check if users already exist
+- name: Create samba user {{item.name}}
+  shell: "(echo {{ item['smbpasswd'] }}; echo {{ item['smbpasswd'] }}) | smbpasswd -s -a {{ item['name'] }}"
+  with_items:
+    - "{{users}}"
+
+- name: Configuring samba shares
+  template:
+    src: homeserver_smb.conf
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart smbd
