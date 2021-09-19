@@ -1,11 +1,11 @@
 ---
 - name: Install generic needed packages
-      apt:
-        name:
-        - samba
-        - samba-vfs-modules
-        state: latest
-        cache_valid_time: 3600
+  apt:
+    name:
+    - samba
+    - samba-vfs-modules
+    state: latest
+    cache_valid_time: 3600
 
 # TODO check if users already exist
 - name: Create samba user {{item.name}}
