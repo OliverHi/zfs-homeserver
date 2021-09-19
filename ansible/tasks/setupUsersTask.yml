@@ -1,12 +1,12 @@
 ---
-- name: Ensure group {{item}} exists
+- name: Ensure usergroups exist
   group:
     name: "{{item}}"
     state: present
   with_items:
     "{{usergroups}}"
 
-- name: Create user {{item.name}}
+- name: Create users
   user:
     name: "{{item.name}}"
     groups: "{{item.groups}}"
@@ -14,7 +14,7 @@
   with_items:
     "{{users}}"
 
-- name: Create personal folder for {{item.name}}
+- name: Create personal folders for users
   file:
     path: /{{zfs.poolName}}/personal/{{item.name}}
     state: directory
@@ -24,7 +24,7 @@
   with_items:
     - "{{users}}"
 
-- name: Create backup folder for {{item.name}}
+- name: Create backup folder for users
   file:
     path: /{{zfs.poolName}}/backup/{{item.name}}
     state: directory
@@ -34,7 +34,7 @@
   with_items:
     - "{{users}}"
 
-- name: Create shared folder {{item.name}}
+- name: Create shared folders
   file:
     path: "{{item.path}}"
     state: directory

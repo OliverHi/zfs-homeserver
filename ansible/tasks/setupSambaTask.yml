@@ -8,7 +8,7 @@
     cache_valid_time: 3600
 
 # TODO check if users already exist
-- name: Create samba user {{item.name}}
+- name: Create samba users
   shell: "(echo {{ item['smbpasswd'] }}; echo {{ item['smbpasswd'] }}) | smbpasswd -s -a {{ item['name'] }}"
   with_items:
     - "{{users}}"
