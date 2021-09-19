@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Pool mit den zu sichernden Daten
+# Pool with the data that needs a backup
 MASTERPOOL="dataPool"
 
 # Backup-Pools
