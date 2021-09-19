@@ -7,6 +7,11 @@
     state: latest
     cache_valid_time: 3600
 
+- name: Start samba service, if not started
+  ansible.builtin.service:
+    name: smbd
+    state: started
+
 # TODO check if users already exist
 - name: Create samba users
   shell: "(echo {{ item['smbpasswd'] }}; echo {{ item['smbpasswd'] }}) | smbpasswd -s -a {{ item['name'] }}"
