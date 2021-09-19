@@ -20,7 +20,7 @@
     state: directory
     owner: "{{item.name}}"
     group: "{{item.name}}"
-    mode: '700'
+    mode: u=rwx,g-rwx,o-rwx
   with_items:
     - "{{users}}"
 
@@ -30,7 +30,7 @@
     state: directory
     owner: "{{item.name}}"
     group: "{{item.name}}"
-    mode: '700'
+    mode: u=rwx,g-rwx,o-rwx
   with_items:
     - "{{users}}"
 
@@ -39,6 +39,6 @@
     path: "{{item.path}}"
     state: directory
     group: "{{shared_folders_group}}"
-    mode: '771'
+    mode: u=rwx,g=rwx,o=x,g+s
   with_items:
     - "{{shared_folders}}"
