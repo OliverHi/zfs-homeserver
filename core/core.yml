@@ -1,0 +1,111 @@
+version: "3.3"
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge
+
+services:
+  traefik:
+    hostname: traefik
+    image: traefik:v1.7.16
+    container_name: traefik
+    restart: unless-stopped
+    domainname: ${DOMAINNAME}
+    networks:
+      - default
+      - traefik_proxy
+    ports:
+      - "81:80"
+      - "443:443"
+      - "7080:8080"
+    labels:
+      - "traefik.enable=false"
+      - "traefik.backend=traefik"
+      - "traefik.frontend.rule=Host:traefik.${DOMAINNAME}"  
+      - "traefik.port=7080"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.frontend.headers.SSLRedirect=true"
+      - "traefik.frontend.headers.STSSeconds=315360000"
+      - "traefik.frontend.headers.browserXSSFilter=true"
+      - "traefik.frontend.headers.contentTypeNosniff=true"
+      - "traefik.frontend.headers.forceSTSHeader=true"
+      - "traefik.frontend.headers.SSLHost=${DOMAINNAME}"
+      - "traefik.frontend.headers.STSIncludeSubdomains=true"
+      - "traefik.frontend.headers.STSPreload=true"
+      - "traefik.frontend.headers.frameDeny=true"
+      #- "traefik.frontend.auth.basic.users=${HTTP_USERNAME}:${HTTP_PASSWORD}"
+      - "com.centurylinklabs.watchtower.enable=false"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "${DATADIR}/traefik/traefik.toml:/traefik.toml"
+      - "${DATADIR}/traefik/acme:/etc/traefik/acme"
+
+  portainer:
+    image: portainer/portainer:1.22.1
+    container_name: portainer
+    restart: unless-stopped
+    command: --admin-password ${PORTAINER_ADMIN_PW}
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DATADIR}/portainer/data:/data
+    networks:
+      - default
+      - traefik_proxy
+    labels:
+      - "traefik.enable=false"
+      - "traefik.backend=portainer"
+      - "traefik.port=9000"
+      - "traefik.frontend.rule=Host:portainer.${DOMAINNAME}"  
+      - "traefik.docker.network=traefik_proxy"
+
+  whoami:
+    image: containous/whoami
+    container_name: whoami
+    restart: unless-stopped
+    networks:
+      #- default
+      - traefik_proxy
+    labels:
+      - "traefik.enable=false"
+      - "traefik.backend=whoami"
+      - "traefik.frontend.rule=Host:whoami.${DOMAINNAME}"  
+      - "traefik.docker.network=traefik_proxy"
+
+  heimdall:
+    image: linuxserver/heimdall
+    container_name: heimdall
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${DATADIR}/heimdall:/config
+    ports:
+      - 9080:80
+      - 9443:443
+    networks:
+      - default
+      - traefik_proxy
+    labels:
+      - "traefik.enable=false"
+      - "traefik.backend=heimdall"
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host:heimdall.${DOMAINNAME}"  
+      - "traefik.docker.network=traefik_proxy"
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=${TZ}
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+      - WATCHTOWER_NOTIFICATION_URL=pushover://shoutrrr:${PO_TOKEN}@${PO_USERKEY}

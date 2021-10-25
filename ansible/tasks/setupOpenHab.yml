@@ -1,0 +1,38 @@
+---
+- name: Create openhab folders
+  file: 
+    path: '{{ item }}'
+    state: directory
+  loop:
+    - /{{docker_data_dir}}/openhab/addons
+    - /{{docker_data_dir}}/openhab/conf
+    - /{{docker_data_dir}}/openhab/userdata
+
+- name: Create grafana data folder
+  file: 
+    path: '{{docker_data_dir}}/grafana/data'
+    owner: '{{adminuser}}'
+    state: directory
+
+- name: Create moquitto folders
+  file: 
+    path: '{{ item }}'
+    state: directory
+    owner: '1883'
+    group: '1883'
+  loop:
+    - /{{docker_data_dir}}/moquitto/config
+    - /{{docker_data_dir}}/moquitto/data
+    - /{{docker_data_dir}}/moquitto/log
+
+- name: Copy default mosquitto settings
+  template:
+    src: moquitto.conf
+    dest: /{{docker_data_dir}}/moquitto/config/mosquitto.conf
+
+- name: Create the log file for mosquitto
+  file: 
+    path: /{{docker_data_dir}}/moquitto/log/mosquitto.log
+    state: touch
+    owner: '1883'
+    group: '1883'

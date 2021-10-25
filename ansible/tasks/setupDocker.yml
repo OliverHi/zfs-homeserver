@@ -1,0 +1,49 @@
+---
+- name: Setup docker .env file
+  template:
+    src: templates/dockerEnv.env
+    dest: "../.env"
+
+- name: Install the needed docker packages
+  apt:
+    name:
+    - docker
+    - docker-compose
+    state: latest
+    cache_valid_time: 3600
+
+- name: Ensure docker group exists
+  group:
+    name: docker
+    state: present
+
+- name: Add user {{adminuser}} to docker group
+  user:
+    name: "{{adminuser}}"
+    groups: docker
+    append: yes
+
+- name: Create folder for docker data
+  file:
+    path: "{{docker.data_dir}}"
+    state: directory
+
+- name: Create folder for traefik data
+  file:
+    path: "{{docker.data_dir}}/traefik/acme"
+    state: directory
+
+- name: Create acme config file for traefik
+  file:
+    path: "{{docker.data_dir}}/traefik/acme/acme.json"
+    state: touch
+    mode: '0600'
+
+- name: Copy treafik config file
+  template:
+    src: templates/traefik.toml
+    dest: "{{docker.data_dir}}/traefik/traefik.toml"
+
+- name: Create the external docker network {{docker.external_network}}
+  docker_network:
+    name: "{{docker.external_network}}"
