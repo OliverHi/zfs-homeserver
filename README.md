@@ -42,6 +42,11 @@ cd zfs-homeserver/ansible
 // udpate the variables in the ./vars/main_vars.yml file to your liking 
 ansible-playbook setup_playbook.yml -K
 ```
+Now update the .env to your liking and start your services.
+
+## Running services
+The server is set up to run services as containers via Docker and docker-compose. Simply add docker-compose yaml files to your setup and run them via `docker-compose -f /path/to/yaml/file up -d`. Run this from the main directory of this repository to make use of the .env file that provides some common variables I use in my yaml files. I have added two example setups, [core](https://github.com/OliverHi/zfs-homeserver/tree/main/core) for some services needed to run the server, and [OpenHab](https://github.com/OliverHi/zfs-homeserver/tree/main/openhab) for a smart home controller called OpenHab, so that you can have a look at them.
+You can find a detailed description how to set up these services [in my blog](https://thesmarthomejourney.com/2021/10/25/home-server-docker-compose/) but the most important part is to keep the data in the `${DATADIR}` directory so that it is part of the automatic backups.
 
 ## Something is missing or not working right
 Please let me know! Create an issue here on GitHub (or better yet a Pull Request with the fix) or contact me via email.
