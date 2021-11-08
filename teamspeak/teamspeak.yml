@@ -1,0 +1,56 @@
+version: '3.3'
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge
+
+services:
+  teamspeak:
+    restart: unless-stopped
+    image: teamspeak
+    container_name: teamspeak
+    depends_on:
+      - db
+    ports:
+      - 9987:9987/udp
+      - 10011:10011
+      - 30033:30033
+    environment:
+      TS3SERVER_DB_PLUGIN: ts3db_mariadb
+      TS3SERVER_DB_SQLCREATEPATH: create_mariadb
+      TS3SERVER_DB_HOST: db
+      TS3SERVER_DB_USER: ${MYSQL_TS_USER}
+      TS3SERVER_DB_PASSWORD: ${MYSQL_TS_PASSWORD}
+      TS3SERVER_DB_NAME: teamspeak
+      TS3SERVER_DB_WAITUNTILREADY: 30
+      TS3SERVER_LICENSE: accept
+    networks:
+      - default
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=teamspeak"
+      - "traefik.frontend.rule=Host:teamspeak.${DOMAINNAME}"
+      - "traefik.port=9987"
+      - "traefik.protocol=udp"
+      - "traefik.docker.network=traefik_proxy"
+
+  db:
+    image: mariadb
+    restart: unless-stopped
+    container_name: mariadb_ts
+    networks:
+      - default
+    volumes:
+      - "${DATADIR}/TS_db/db:/var/lib/mysql"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_TS_DB}
+      - MYSQL_USER=${MYSQL_TS_USER}
+      - MYSQL_PASSWORD=${MYSQL_TS_PASSWORD}

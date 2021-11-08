@@ -1,0 +1,44 @@
+debug = false
+
+logLevel = "INFO" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+InsecureSkipVerify = true 
+defaultEntryPoints = ["https", "http"]
+
+# This will hide all docker containers that don't have explicitly set label to "enable"
+exposedbydefault = false
+
+# WEB interface of Traefik - it will show web page with overview of frontend and backend configurations 
+[api]
+  entryPoint = "traefik"
+  dashboard = true
+  address = ":8080"
+
+# Force HTTPS
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+
+# for later use with non-docker apps
+#[file]
+#  watch = true
+#  filename = "/etc/traefik/rules.toml"
+
+# Let's encrypt configuration
+[acme]
+  email = "${LETSENCRYPT_EMAIL}"
+  storage = "/etc/traefik/acme/acme.json"
+  entryPoint = "https"
+  acmeLogging = true 
+  OnHostRule = true
+[acme.httpChallenge]
+  entryPoint = "http"
+   
+# Connection to docker host system (docker.sock)
+[docker]
+  endpoint = "unix:///var/run/docker.sock"
+  domain = "${DOMAINNAME}"
