@@ -20,7 +20,7 @@ This setup will
   - including [automatic updates via Watchtower](https://thesmarthomejourney.com/2021/03/01/watchtower-docker-auto-updates/) (if you want it)
 - uses the Traefik reverse proxy to make select services available outside of your network, e.g. via example.com/yourservice (you need your own domain for that)
   - with automatically generated valid SSL certificates
-  - simple to configure
+  - simple to configure [(detailed guide here)](https://thesmarthomejourney.com/2021/11/08/traefik-1-reverse-proxy-setup/)
 
 ## Prerequisites
 You need some hardware to run this on. I provide some more details [in my blog post here](https://thesmarthomejourney.com/2021/09/06/home-server-basics-ansible/) but I recommend some mid class PC hardware optimized for low energy usage and long runtimes. A Raspberry Pi might work but it a bit underpowered and makes it complicated to connect multiple drives. 
