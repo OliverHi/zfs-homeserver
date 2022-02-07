@@ -18,7 +18,7 @@ if [ "$(zpool status $POOL -x)" != "pool '$POOL' is healthy" ]; then
         curl -s -F "token=$PO_TOKEN" \
     -F "user=$PO_UK" \
     -F "title=Zpool status unhealthy!" \
-    -F "message=The status of pool $POOL does not seem to healthy" https://api.pushover.net/1/message.json
+    -F "message=The status of pool $POOL does not seem to healthy" https://api.pushover.net/1/messages.json
 else
         echo "$(date) - Zpool $POOL status is healthy" >> $LOGFILE
 fi
