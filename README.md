@@ -11,6 +11,7 @@ This setup will
 - pool a set of drives with ZFS providing a secure storage with buildin versioning
   - uses RAID Z (similar to RAID 5) by default but you can change it to your liking  
   - includes a backup solution vis ZFS snapshots
+  - scripts for [checking the backups](https://thesmarthomejourney.com/2021/10/17/automatic-backup-check-zfs/) and the [pool health](https://thesmarthomejourney.com/wp-admin/post.php?post=1640&action=edit)
   - more details in my blog [post on ZFS backups](https://thesmarthomejourney.com/2021/09/12/home-server-zfs-backup/)
 - make the storage available for the local network via samba shares 
   - including support for Windows "shadow copies" via the snapshots
