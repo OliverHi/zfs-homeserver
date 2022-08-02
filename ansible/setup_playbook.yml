@@ -10,6 +10,12 @@
     vars_files:
         - vars/main_vars.yml
 
+    handlers:
+    - name: restart smbd
+      ansible.builtin.service:
+        name: smbd
+        state: restarted
+
     tasks:
     - name: Install generic needed packages
       apt:
