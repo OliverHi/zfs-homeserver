@@ -11,6 +11,7 @@
     name: "{{item.name}}"
     groups: "{{item.groups}}"
     append: yes
+    update_password: on_create
   with_items:
     "{{users}}"
 
