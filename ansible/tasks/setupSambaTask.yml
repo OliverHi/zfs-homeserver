@@ -12,11 +12,9 @@
     name: smbd
     state: started
 
-# TODO check if users already exist
-- name: Create samba users
-  shell: "(echo {{ item['smbpasswd'] }}; echo {{ item['smbpasswd'] }}) | smbpasswd -s -a {{ item['name'] }}"
-  with_items:
-    - "{{users}}"
+- name: Create/update samba users
+  include_tasks: "smbusers.yml"
+  loop: "{{users}}"
 
 - name: Configuring samba shares
   template:
